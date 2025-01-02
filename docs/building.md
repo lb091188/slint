@@ -102,7 +102,7 @@ More info: <https://github.com/git-for-windows/git/wiki/Symbolic-Links>
 ## Building and Testing
 
 Most of the project is written in Rust, and compiling and running the test can
-done with cargo.
+be done with cargo.
 
 ```sh
 cargo build
@@ -229,25 +229,14 @@ The quickstart guide is part of the DSL documentation.
 
 ### Quickstart and DSL docs
 
-The quickstart and DSL docs are written in markdown and built with Sphinx, using the myst parser extension.
-
-**Prerequisites**:
-
-- [pipenv](https://pipenv.pypa.io/en/latest/)
-- [Python](https://www.python.org/downloads/)
-
-Use the following command line to build the documentation using `rustdoc` to the `target/slintdocs/html` folder:
-
-```shell
-cargo xtask slintdocs --show-warnings
-```
+See [astro/README.md](astro/README.md)
 
 ### Rust API docs
 
 Run the following command to generate the documentation using rustdoc in the `target/doc/` sub-folder:
 
 ```sh
-RUSTDOCFLAGS="--html-in-header=$PWD/docs/astro/src/utils/slint-docs-preview.html --html-in-header=$PWD/docs/astro/src/utils/slint-docs-highlight.html" cargo doc --no-deps --features slint/document-features,slint/log
+RUSTDOCFLAGS="--html-in-header=$PWD/docs/astro/src/utils/slint-docs-preview.html --html-in-header=$PWD/docs/astro/src/utils/slint-docs-highlight.html" cargo doc --package slint --no-deps --features slint/document-features,slint/log
 ```
 
 Note: `--html-in-header` arguments passed to rustdoc via `RUSTDOCFLAGS` are used to enable syntax highlighting and live-preview for Slint example snippets.

@@ -7,7 +7,8 @@ use alloc::{format, string::String};
 use i_slint_core::api::PlatformError;
 use i_slint_core::graphics::{RequestedGraphicsAPI, RequestedOpenGLVersion};
 
-/// Use the BackendSelector to configure one of Slint's built-in backends with a renderer
+#[i_slint_core_macros::slint_doc]
+/// Use the BackendSelector to configure one of Slint's built-in [backends with a renderer](slint:backends_and_renderers)
 /// to accomodate specific needs of your application. This is a programmatic substitute for
 /// the `SLINT_BACKEND` environment variable.
 ///
@@ -119,7 +120,7 @@ impl BackendSelector {
         self.select_internal()
     }
 
-    pub fn select_internal(&mut self) -> Result<(), PlatformError> {
+    fn select_internal(&mut self) -> Result<(), PlatformError> {
         self.selected = true;
 
         let backend_name = self.backend.as_deref().unwrap_or(super::DEFAULT_BACKEND_NAME);

@@ -6,60 +6,76 @@ import { EditorFontSettings, EditorSizeSettings, EditorSpaceSettings, EditorPale
 import { Api, SelectionStackFrame, SelectionStackFilter } from "../api.slint";
 import { Icons } from "styling.slint";
 
-component FilterList inherits Rectangle {
+component FilterList {
+    public function show() { pop.show(); } 
+    public function close() { pop.close(); }
+    
     out property <SelectionStackFilter> filter: {
-        if (!lcb.checked && !icb.checked && ocb.checked) {
+        if (!self.filter-layout && !self.filter-interactive && self.filter-other) {
             return SelectionStackFilter.Others;
-        } else if (!lcb.checked && icb.checked && !ocb.checked) {
+        } else if (!self.filter-layout && self.filter-interactive && !self.filter-other) {
             return SelectionStackFilter.Interactive;
-        } else if (!lcb.checked && icb.checked && ocb.checked) {
+        } else if (!self.filter-layout && self.filter-interactive && self.filter-other) {
             return SelectionStackFilter.InteractiveAndOthers;
-        } else if (lcb.checked && !icb.checked && !ocb.checked) {
+        } else if (self.filter-layout && !self.filter-interactive && !self.filter-other) {
             return SelectionStackFilter.Layouts;
-        } else if (lcb.checked && !icb.checked && ocb.checked) {
+        } else if (self.filter-layout && !self.filter-interactive && self.filter-other) {
             return SelectionStackFilter.LayoutsAndOthers;
-        } else if (lcb.checked && icb.checked && !ocb.checked) {
+        } else if (self.filter-layout && self.filter-interactive && !self.filter-other) {
             return SelectionStackFilter.LayoutsAndInteractive;
-        } else if (lcb.checked && icb.checked && ocb.checked) {
+        } else if (self.filter-layout && self.filter-interactive && self.filter-other) {
             return SelectionStackFilter.Everything;
         }
         return SelectionStackFilter.Nothing;
     }
-    out property <bool> has-filter: !lcb.checked || !icb.checked || !ocb.checked;
+    out property <bool> has-filter: !self.filter-layout || !self.filter-interactive || !self.filter-other;
 
-    border-color: Palette.border;
-    border-width: 1px;
-    border-radius: EditorSizeSettings.radius;
+    in-out property <bool> filter-interactive: true;
+    in-out property <bool> filter-layout: true;
+    in-out property <bool> filter-other: true;
 
-    drop-shadow-blur: EditorSpaceSettings.default-padding;
-    drop-shadow-color: Palette.foreground.transparentize(0.9);
+    width: 0px;
+    height: 0px;
 
-    background: Palette.alternate-background;
+    pop := PopupWindow {
+        width: self.preferred-width;
+        height: self.preferred-height;
 
-    TouchArea {
-        y: - EditorSpaceSettings.default-padding;
-        height: parent.height + EditorSpaceSettings.default-padding * 2;
+        close-policy: PopupClosePolicy.close-on-click-outside;
+        
+        Rectangle {
+            border-color: Palette.border;
+            border-width: 1px;
+            border-radius: EditorSizeSettings.radius;
 
-        // Just block events from reaching other TouchAreas!
-    }
+            drop-shadow-blur: EditorSpaceSettings.default-padding;
+            drop-shadow-color: Palette.foreground.transparentize(0.9);
 
-    VerticalLayout {
-        padding: EditorSpaceSettings.default-padding;
-        spacing: EditorSpaceSettings.default-spacing;
+            background: Palette.alternate-background;
 
-        lcb := CheckBox {
-            text: @tr("Layouts");
-            checked: true;
-        }
+            TouchArea {
+                // Just block events from reaching other TouchAreas!
+            }
 
-        icb := CheckBox {
-            text: @tr("Interactive");
-            checked: true;
-        }
+            VerticalLayout {
+                padding: EditorSpaceSettings.default-padding;
+                spacing: EditorSpaceSettings.default-spacing;
 
-        ocb := CheckBox {
-            text: @tr("Other");
-            checked: true;
+                lcb := CheckBox {
+                    text: @tr("Layouts");
+                    checked <=> root.filter-layout;
+                }
+
+                icb := CheckBox {
+                    text: @tr("Interactive");
+                    checked <=> root.filter-interactive;
+                }
+
+                ocb := CheckBox {
+                    text: @tr("Other");
+                    checked <=> root.filter-other;
+                }
+            }
         }
     }
 }
@@ -69,6 +85,11 @@ component PopupInner inherits Rectangle {
     in property <length> preview-height: 900px;
 
     callback close();
+
+    in-out property <bool> filter-interactive: true;
+    in-out property <bool> filter-layout: true;
+    in-out property <bool> filter-other: true;
+    in-out property <string> filter-text: "";
 
     in property <length> max-popup-height: 900px;
     in-out property <length> selection-x: 0px;
@@ -205,7 +226,6 @@ component PopupInner inherits Rectangle {
         changed has-hover => {
             if self.has-hover {
                 root.unselect-previewed-selection();
-                filter-list.visible = false;
             }
         }
     }
@@ -230,8 +250,12 @@ component PopupInner inherits Rectangle {
                 colorize-icon: true;
 
                 clicked => {
-                    filter-list.visible = !filter-list.visible;
+                    filter-list.show();
                     filter-edit.clear-focus();
+                    self.checked = filter-state;
+                }
+
+                init => {
                     self.checked = filter-state;
                 }
             }
@@ -239,6 +263,7 @@ component PopupInner inherits Rectangle {
             filter-edit := LineEdit {
                 placeholder-text: "Filter";
                 min-width: 50px;
+                text <=> root.filter-text;
                 init => {
                     self.focus();
                 }
@@ -442,7 +467,6 @@ component PopupInner inherits Rectangle {
                                 }
                                 changed has-hover => {
                                     if self.has-hover {
-                                        filter-list.visible = false;
                                         Api.select-element(frame.element-path, frame.element-offset, frame.x * root.preview-width, frame.y * root.preview-height);
                                     }
                                 }
@@ -465,10 +489,9 @@ component PopupInner inherits Rectangle {
         x: filter-button.x + EditorSpaceSettings.default-spacing;
         y: filter-button.y + filter-button.height + EditorSpaceSettings.default-spacing;
 
-        width: self.preferred-width;
-        height: self.preferred-height;
-
-        visible: false;
+        filter-layout <=> root.filter-layout;
+        filter-interactive <=> root.filter-interactive;
+        filter-other <=> root.filter-other;
     }
 }
 
@@ -488,6 +511,11 @@ export component SelectionPopup {
     private property <length> selection-x;
     private property <length> selection-y;
 
+    private property <bool> filter-interactive: true;
+    private property <bool> filter-layout: true;
+    private property <bool> filter-other: true;
+    private property <string> filter-text: "";
+
     popup := PopupWindow {
         in property <length> preview-width: root.preview-width;
         in property <length> preview-height: root.preview-height;
@@ -495,6 +523,11 @@ export component SelectionPopup {
         in-out property <length> selection-x: root.selection-x;
         in-out property <length> selection-y: root.selection-y;
         in property <length> max-popup-height: root.max-popup-height;
+
+        in-out property <bool> filter-interactive <=> root.filter-interactive;
+        in-out property <bool> filter-layout <=> root.filter-layout;
+        in-out property <bool> filter-other <=> root.filter-other;
+        in-out property <string> filter-text <=> root.filter-text;
 
         close-policy: PopupClosePolicy.close-on-click-outside;
 
@@ -508,6 +541,11 @@ export component SelectionPopup {
                 close() => {
                     popup.close();
                 }
+
+                filter-text <=> popup.filter-text;
+                filter-layout <=> popup.filter-layout;
+                filter-interactive <=> popup.filter-interactive;
+                filter-other <=> popup.filter-other;
 
                 preview-width <=> popup.preview-width;
                 preview-height <=> popup.preview-height;

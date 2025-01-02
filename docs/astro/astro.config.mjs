@@ -6,11 +6,12 @@ import starlight from "@astrojs/starlight";
 import starlightLinksValidator from "starlight-links-validator";
 import rehypeExternalLinks from "rehype-external-links";
 import starlightSidebarTopics from "starlight-sidebar-topics";
+import { BASE_PATH, BASE_URL } from "./src/utils/site-config";
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://snapshots.slint.dev/master/docs/slint/",
-    base: "/master/docs/slint",
+    site: `${BASE_URL}${BASE_PATH}`,
+    base: BASE_PATH,
     markdown: {
         rehypePlugins: [
             [
@@ -30,7 +31,7 @@ export default defineConfig({
     },
     integrations: [
         starlight({
-            title: "1.9.0",
+            title: "1.9.2",
             logo: {
                 light: "./src/assets/slint-logo-simple-light.webp",
                 dark: "./src/assets/slint-logo-simple-dark.webp",
@@ -67,10 +68,6 @@ export default defineConfig({
                                                 slug: "guide/language/concepts/slint-language",
                                             },
                                             {
-                                                label: "Components and Properties",
-                                                slug: "guide/language/concepts/component-property",
-                                            },
-                                            {
                                                 label: "Reactivity",
                                                 slug: "guide/language/concepts/reactivity",
                                             },
@@ -94,10 +91,6 @@ export default defineConfig({
                                             {
                                                 label: "Positioning & Layouts",
                                                 slug: "guide/language/coding/positioning-and-layouts",
-                                            },
-                                            {
-                                                label: "In App Communication",
-                                                slug: "guide/language/coding/in-app-communication",
                                             },
                                             {
                                                 label: "Globals",
@@ -194,6 +187,10 @@ export default defineConfig({
                                         label: "Colors & Brushes",
                                         slug: "reference/colors-and-brushes",
                                     },
+                                    {
+                                        label: "Timer",
+                                        slug: "reference/timer",
+                                    },
                                 ],
                             },
                             {
@@ -227,10 +224,14 @@ export default defineConfig({
                                                 label: "TextInput",
                                                 slug: "reference/keyboard-input/textinput",
                                             },
+                                            {
+                                                label: "TextInputInterface",
+                                                slug: "reference/keyboard-input/textinputinterface",
+                                            },
                                         ],
                                     },
                                     {
-                                        label: "Layouts",
+                                        label: "Basic Layouts",
                                         items: [
                                             {
                                                 label: "Common Properties",
@@ -303,7 +304,7 @@ export default defineConfig({
                                         },
                                     },
                                     {
-                                        label: "Layouts",
+                                        label: "Widget Layouts",
                                         autogenerate: {
                                             directory:
                                                 "reference/std-widgets/layouts",

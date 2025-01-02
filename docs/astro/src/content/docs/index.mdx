@@ -30,32 +30,32 @@ import LineHighlight from '/src/assets/getting-started/line-highlight.webp';
 
 <CardGrid>
 <LinkCard
-  title="指南"
-  description="这将帮助你快速上手 Slint 开发所需的工具，包括通过 Slint 语言服务器 (LSP) 和 Slint 查看器实现的 IDE 集成。
-<br/><br/>
-然后，它提供了一本指南，解释了所有 Slint 的关键概念以及如何理解和使用 Slint 语言。"
-  href="/master/docs/slint"
+  title="Guide"
+  description="This will get you up and running with the tooling for Slint development including the IDE integration via the Slint Language Server (LSP) and Slint Viewer.
+  <br/><br/>
+  It then offers a guide explaining all the key concepts of Slint and how to understand and use the Slint language."
+  href={`${import.meta.env.BASE_URL}`}
 >
 </LinkCard>
 
 <LinkCard
   title="参考手册"
   description="这包含了 Slint 语言各个方面 的 API 参考手册。包括所有的元素、属性、函数、回调和命名空间。此外，还包含了 `std-widgets` 库的 API 参考手册。这是一组跨平台组件，可用于构建桌面应用程序。"
-  href="/master/docs/slint/reference/primitive-types"
+  href={`${import.meta.env.BASE_URL}/reference/primitive-types`}
 >
 </LinkCard>
 
 <LinkCard
   title="教程"
   description="对于喜欢通过示例学习或想了解如何构建一个简单应用程序结构的人来说，本节包含一个逐步教程，引导您完成创建一个简单的记忆游戏示例的过程。"
-href="/master/docs/slint/tutorial/quickstart/"
+  href={`${import.meta.env.BASE_URL}/tutorial/quickstart/`}
 >
 </LinkCard>
 
 <LinkCard
   title="语言集成"
   description="这详细介绍了 Slint 的 Rust、C++ 和 JS-Runtime 版本的 API。"
-href="/master/docs/slint/language-integrations/"
+  href={`${import.meta.env.BASE_URL}/language-integrations/`}
 >
 </LinkCard>
 </CardGrid>

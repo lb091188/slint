@@ -74,11 +74,11 @@ build = "build.rs"
 edition = "2021"
 
 [dependencies]
-slint = "1.8.0"
+slint = "1.9.0"
 ...
 
 [build-dependencies]
-slint-build = "1.8.0"
+slint-build = "1.9.0"
 ```
 
 Use the API of the slint-build crate in the `build.rs` file:
@@ -124,7 +124,7 @@ export component MyComponent inherits Window { /*...*/ }
 
 in the .slint file, it will create a
 ```rust
-struct MyComponent{ /*...*/ }
+struct MyComponent { /*...*/ }
 ```
 
 See also our [sample component](docs::generated_code::SampleComponent) for more information about the API of the generated struct.
@@ -433,7 +433,7 @@ pub use i_slint_backend_selector::api::*;
 /// Helper type that helps checking that the generated code is generated for the right version
 #[doc(hidden)]
 #[allow(non_camel_case_types)]
-pub struct VersionCheck_1_9_0;
+pub struct VersionCheck_1_9_2;
 
 #[cfg(doctest)]
 mod compile_fail_tests;
