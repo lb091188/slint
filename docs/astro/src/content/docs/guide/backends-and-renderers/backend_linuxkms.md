@@ -6,19 +6,17 @@ description: LinuxKMS Backend
 
 <!-- cSpell: ignore linuxkms libinput libseat libudev libgbm libxkbcommon xkbcommon noseat -->
 
-The LinuxKMS backend runs only on Linux and eliminates the need for a windowing system such as Wayland or X11.
-Instead it uses the following libraries and interface to render directly to the screen and react to touch, mouse,
-and keyboard input.
+LinuxKMS后端仅在Linux上运行，无需依赖Wayland或X11等窗口系统。它通过以下库和接口直接渲染到屏幕，并响应触摸、鼠标和键盘输入。
 
- - OpenGL via KMS/DRI.
- - Vulkan via the Vulkan KHR Display Extension.
- - DRM dumb buffers for software rendering.
- - libinput/libudev for input event handling from mice, touch screens, or keyboards.
- - libseat for GPU and input device access without requiring root access. (optional)
+- 通过KMS/DRI实现OpenGL。
+- 通过Vulkan KHR显示扩展实现Vulkan。
+- 使用DRM dumb缓冲区进行软件渲染。
+- 使用libinput/libudev处理来自鼠标、触摸屏或键盘的输入事件。
+- 使用libseat无需root权限即可访问GPU和输入设备。（可选）
 
-For compilation, pkg-config is used to determine the location of the following required system libraries:
+在编译过程中，使用 pkg-config 来确定以下必需的系统库的位置：
 
-| pkg-config package name | Package name on Debian based distros |
+| pkg-config 包名称 | 基于 Debian 的发行版中的包名 |
 |-------------------------|--------------------------------------|
 | `gbm`                   | `libgbm-dev`                         |
 | `xkbcommon`             | `libxkbcommon-dev`                   |
@@ -26,134 +24,107 @@ For compilation, pkg-config is used to determine the location of the following r
 | `libseat`               | `libseat-dev`                        |
 
 :::note{Note}
-If you don't have `libseat` available on your target system, then instead of selecting `backend-linuxkms`, select
-`backend-linuxkms-noseat`. This variant of the LinuxKMS backend eliminates the need to have libseat installed, but
-in exchange requires running the application as a user that's privileged to access all input and DRM/KMS device
-files; typically that's the root user.
+如果目标系统上没有 `libseat`，则不要选择 `backend-linuxkms`，而是选择 `backend-linuxkms-noseat`。此版本的 LinuxKMS 后端无需安装 libseat，但作为交换，需要以具有访问所有输入和 DRM/KMS 设备文件权限的用户身份运行应用程序；通常这是 root 用户。
 :::
 
-The LinuxKMS backend supports different renderers. They can be explicitly selected for use through the
-`SLINT_BACKEND` environment variable.
+LinuxKMS 后端支持不同的渲染器。可以通过 `SLINT_BACKEND` 环境变量显式选择使用的渲染器。
 
-| Renderer name | Required Graphics APIs | `SLINT_BACKEND` value to select renderer                                    |
+| 渲染器名称 | 所需的图形 API | 选择渲染器的 `SLINT_BACKEND` 值 |
 |---------------|------------------------|-----------------------------------------------------------------------------|
 | FemtoVG       | OpenGL ES 2.0          | `linuxkms-femtovg`                                                          |
-| Skia          | OpenGL ES 2.0, Vulkan  | `linuxkms-skia-opengl`, `linuxkms-skia-vulkan`, or `linuxkms-skia-software` |
-| Software      | None                   | `linuxkms-software`                                                         |
+| Skia          | OpenGL ES 2.0, Vulkan  | `linuxkms-skia-opengl`, `linuxkms-skia-vulkan`, 或 `linuxkms-skia-software` |
+| Software      | 无                     | `linuxkms-software`                                                         |
 
-:::note{Note}
-This backend is still experimental. The backend has not undergone a great variety of testing on different devices
-and there are [known issues](https://github.com/slint-ui/slint/labels/a%3Abackend-linuxkms).
+:::note{注意}
+该后端仍处于实验阶段。后端尚未在多种设备上进行广泛测试，且存在[已知问题](https://github.com/slint-ui/slint/labels/a%3Abackend-linuxkms)。
 :::
 
-:::note{Note}
-A mouse is supported as input device, but rendering of the mouse cursor only works with the Skia and FemtoVG renderers,
-not with the Slint software renderer.
+:::note{注意}
+支持鼠标作为输入设备，但鼠标光标的渲染仅适用于 Skia 和 FemtoVG 渲染器，不适用于 Slint 软件渲染器。
 :::
 
-## Display Selection with OpenGL or Skia Software
+## 使用 OpenGL 或 Skia 软件选择显示
 
-FemtoVG uses OpenGL, and Skia - unless Vulkan is enabled - uses OpenGL, too. Linux's direct rendering manager
-(DRM) subsystem is used to configure display outputs. Slint defaults to selecting the first connected
-display and configures it at either its preferred resolution (if available) or its highest. Set the `SLINT_DRM_OUTPUT`
-environment variable to select a specific display. To get a list of available outputs, set `SLINT_DRM_OUTPUT`
-to `list`, run your program, and observe the output.
+FemtoVG 使用 OpenGL，而 Skia（除非启用 Vulkan）也使用 OpenGL。Linux 的直接渲染管理器（DRM）子系统用于配置显示输出。Slint 默认选择第一个连接的显示器，并将其配置为其首选分辨率（如果可用）或最高分辨率。设置 `SLINT_DRM_OUTPUT` 环境变量以选择特定的显示器。要获取可用输出的列表，将 `SLINT_DRM_OUTPUT` 设置为 `list`，运行程序并观察输出。
 
-For example, the output may look like this on a laptop with a built-in screen (eDP-1) and an externally
-connected monitor (DP-3):
+例如，在带有内置屏幕（eDP-1）和外部连接显示器（DP-3）的笔记本电脑上，输出可能如下所示：
 
 ```
-DRM Output List Requested:
-eDP-1 (connected: true)
-DP-1 (connected: false)
-DP-2 (connected: false)
-DP-3 (connected: true)
-DP-4 (connected: false)
+DRM 输出列表请求：
+eDP-1 (已连接: true)
+DP-1 (已连接: false)
+DP-2 (已连接: false)
+DP-3 (已连接: true)
+DP-4 (已连接: false)
 ```
 
-Setting `SLINT_DRM_OUTPUT` to `DP-3` will render on the second monitor.
+将 `SLINT_DRM_OUTPUT` 设置为 `DP-3` 将在第二个显示器上渲染。
 
-To select a specific resolution and refresh rate (mode), set the `SLINT_DRM_MODE` variable. Set it to `list` and
-run your program to get a list of available modes. For example the program output could look like this:
+要选择特定的分辨率和刷新率（模式），设置 `SLINT_DRM_MODE` 变量。将其设置为 `list` 并运行程序以获取可用模式的列表。例如，程序输出可能如下所示：
 
 ```
-DRM Mode List Requested:
-Index: 0 Width: 3840 Height: 2160 Refresh Rate: 60
-Index: 1 Width: 3840 Height: 2160 Refresh Rate: 50
-Index: 2 Width: 3840 Height: 2160 Refresh Rate: 30
-Index: 3 Width: 2560 Height: 1440 Refresh Rate: 59
-Index: 4 Width: 1920 Height: 1080 Refresh Rate: 60
-Index: 5 Width: 1680 Height: 1050 Refresh Rate: 59
+DRM 模式列表请求：
+索引: 0 宽度: 3840 高度: 2160 刷新率: 60
+索引: 1 宽度: 3840 高度: 2160 刷新率: 50
+索引: 2 宽度: 3840 高度: 2160 刷新率: 30
+索引: 3 宽度: 2560 高度: 1440 刷新率: 59
+索引: 4 宽度: 1920 高度: 1080 刷新率: 60
+索引: 5 宽度: 1680 高度: 1050 刷新率: 59
 ...
 ```
 
-Set `SLINT_DRM_MODE` to `4` to select 1920x1080@60.
+将 `SLINT_DRM_MODE` 设置为 `4` 以选择 1920x1080@60。
 
-## Display Selection with Vulkan
+## 使用 Vulkan 选择显示
 
-When Skia's Vulkan feature is enabled, Skia will attempt use Vulkan's KHR Display extension to render
-directly to a connected screen. Slint defaults to selecting the first connected display and configures it at
-its highest available resolution and refresh rate. Set the `SLINT_VULKAN_DISPLAY` environment variable
-to select a specific display. To get a list of available outputs, set `SLINT_VULKAN_DISPLAY` to `list`,
-run your program, and observe the output.
+当启用 Skia 的 Vulkan 功能时，Skia 将尝试使用 Vulkan 的 KHR 显示扩展直接渲染到连接的屏幕。Slint 默认选择第一个连接的显示器，并将其配置为最高可用分辨率和刷新率。设置 `SLINT_VULKAN_DISPLAY` 环境变量以选择特定的显示器。要获取可用输出的列表，将 `SLINT_VULKAN_DISPLAY` 设置为 `list`，运行程序并观察输出。
 
-For example, the output may look like this on a laptop with a built-in screen (index 0) and an externally
-connected monitor (index 1):
+例如，在带有内置屏幕（索引 0）和外部连接显示器（索引 1）的笔记本电脑上，输出可能如下所示：
 
 ```
-Vulkan Display List Requested:
-Index: 0 Name: monitor
-Index: 1 Name: monitor
+Vulkan 显示列表请求：
+索引: 0 名称: 显示器
+索引: 1 名称: 显示器
 ```
 
-Setting `SLINT_VULKAN_DISPLAY` to `1` will render on the second monitor.
+将 `SLINT_VULKAN_DISPLAY` 设置为 `1` 将在第二个显示器上渲染。
 
-To select a specific resolution and refresh rate (mode), set the `SLINT_VULKAN_MODE` variable. Set it
-to `list` and run your program to get a list of available modes. For example the program output could look like this:
+要选择特定的分辨率和刷新率（模式），设置 `SLINT_VULKAN_MODE` 变量。将其设置为 `list` 并运行程序以获取可用模式的列表。例如，程序输出可能如下所示：
 
 ```
-Vulkan Mode List Requested:
-Index: 0 Width: 3840 Height: 2160 Refresh Rate: 60
-Index: 1 Width: 3840 Height: 2160 Refresh Rate: 50
-Index: 2 Width: 3840 Height: 2160 Refresh Rate: 30
-Index: 3 Width: 2560 Height: 1440 Refresh Rate: 59
-Index: 4 Width: 1920 Height: 1080 Refresh Rate: 60
-Index: 5 Width: 1680 Height: 1050 Refresh Rate: 59
+Vulkan 模式列表请求：
+索引: 0 宽度: 3840 高度: 2160 刷新率: 60
+索引: 1 宽度: 3840 高度: 2160 刷新率: 50
+索引: 2 宽度: 3840 高度: 2160 刷新率: 30
+索引: 3 宽度: 2560 高度: 1440 刷新率: 59
+索引: 4 宽度: 1920 高度: 1080 刷新率: 60
+索引: 5 宽度: 1680 高度: 1050 刷新率: 59
 ...
 ```
 
-Set `SLINT_VULKAN_MODE` to `4` to select 1920x1080@60.
+将 `SLINT_VULKAN_MODE` 设置为 `4` 以选择 1920x1080@60。
 
-## Configuring the Keyboard
+## 配置键盘
 
-By default the keyboard layout and model is assumed to be a US model and layout. Set the following
-environment variables to configure support for different keyboards:
+默认情况下，键盘布局和型号假定为美国型号和布局。设置以下环境变量以配置对不同键盘的支持：
 
-* `XKB_DEFAULT_LAYOUT`: A comma separated list of layouts (languages) to include in the keymap.
-  See the layouts section in [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) for a list of accepted language codes.
-  for a list of supported layouts.
-* `XKB_DEFAULT_MODEL`: The keyboard model by which to interpreter keys. See the models section in
-  [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) for a list of accepted model codes.
-* `XKB_DEFAULT_VARIANT`: A comma separated list of variants, one per layout, which configures layout specific variants. See the values in parentheses in the layouts section in [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) for a list of accepted variant codes.
-* `XKB_DEFAULT_OPTIONS`: A comma separated list of options to configure layout-independent key combinations. See the
-  options section in
-  [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) for a list of accepted option codes.
+* `XKB_DEFAULT_LAYOUT`：以逗号分隔的布局（语言）列表，包含在键映射中。有关接受的语言代码列表，请参阅 [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) 中的布局部分。
+* `XKB_DEFAULT_MODEL`：用于解释键的键盘型号。有关接受的型号代码列表，请参阅 [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) 中的型号部分。
+* `XKB_DEFAULT_VARIANT`：以逗号分隔的变体列表，每个布局一个，用于配置布局特定的变体。有关接受的变体代码列表，请参阅 [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) 中布局部分括号内的值。
+* `XKB_DEFAULT_OPTIONS`：以逗号分隔的选项列表，用于配置与布局无关的键组合。有关接受的选项代码列表，请参阅 [xkeyboard-config(7)](https://manpages.debian.org/testing/xkb-data/xkeyboard-config.7.en.html) 中的选项部分。
 
-## Display Rotation
+## 显示旋转
 
-If your display's default orientation does not match the desired orientation of your user interface, then you can
-set the `SLINT_KMS_ROTATION` environment variable to instruct Slint to rotate at rendering time. Supported values
-are the rotation in degrees: `0`, `90`, `180`, and `270`.
+如果显示器的默认方向与用户界面的期望方向不匹配，则可以设置 `SLINT_KMS_ROTATION` 环境变量，指示 Slint 在渲染时进行旋转。支持的值是旋转角度：`0`、`90`、`180` 和 `270`。
 
-Note that this variable merely rotates the rendering output. If you're using a touch screen attached to the same
-display, then you may need to configure it to also apply a rotation on the touch events generated. For configuring
-libinput's `LIBINPUT_CALIBRATION_MATRIX` see the [libinput Documentation](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html#static-device-configuration-via-udev)
-for a list of valid values. Values can typically be set by writing them into a rules file under `/etc/udev/rules.d`.
+请注意，此变量仅旋转渲染输出。如果您使用的是连接到同一显示器的触摸屏，则可能需要配置它，以对生成的触摸事件也应用旋转。有关配置 libinput 的 `LIBINPUT_CALIBRATION_MATRIX`，请参阅 [libinput 文档](https://wayland.freedesktop.org/libinput/doc/latest/device-configuration-via-udev.html#static-device-configuration-via-udev) 以获取有效值列表。通常可以通过将这些值写入 `/etc/udev/rules.d` 下的规则文件来设置。
 
-The following example configures libinput to apply a 90 degree clockwise rotation for any attached touch screen:
+以下示例配置 libinput 为任何连接的触摸屏应用 90 度顺时针旋转：
 
 ```bash
 echo 'ENV{LIBINPUT_CALIBRATION_MATRIX}="0 -1 1 1 0 0"' > /etc/udev/rules.d/libinput.rules
 udevadm control --reload-rules
 udevadm trigger
 ```
+
+

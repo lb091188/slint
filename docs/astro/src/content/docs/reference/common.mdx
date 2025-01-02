@@ -1,6 +1,6 @@
 ---
 <!-- Copyright © SixtyFPS GmbH <info@slint.dev> ; SPDX-License-Identifier: MIT -->
-title: Common Properties & Callbacks
+title: Common Properties & Callbacks 通用属性和回调函数
 description: Common Properties & Callbacks
 ---
 
@@ -8,59 +8,46 @@ import SlintProperty  from '/src/components/SlintProperty.astro';
 import CodeSnippetMD from '/src/components/CodeSnippetMD.astro';
 import Link from '/src/components/Link.astro';
 
-The Slint elements have many common properties, callbacks and behavior.
-This page describes these properties and their usage.
+Slint 元素具有许多通用属性、回调函数和行为。本页描述了这些属性及其用法。
 
+## 通用视觉属性
 
-## Common Visual Properties
-
-These properties are valid on all visual items. For example `Rectangle`, `Text`, and `layouts`. Non 
-visual items such as `Timer` don't have these properties.
-
+这些属性适用于所有视觉元素，例如 `Rectangle`、`Text` 和 `layouts`。非视觉元素（如 `Timer`）没有这些属性。
 
 ### x, y
 <SlintProperty propName="x, y" typeName="length" >
-The position of the element relative to its parent.
+元素相对于其父元素的位置。
 </SlintProperty>
 
 ### z
 <SlintProperty propName="z" typeName="float" >
-Allows to specify a different order to stack the items with its siblings.
-The value must be a compile time constant.
+允许指定元素与其兄弟元素的堆叠顺序。该值必须为编译时常量。
 
-:::note[Note]
-Currently the `z` value is a compile time constant and cannot be changed at runtime.
+:::note[注意]
+目前 `z` 值为编译时常量，无法在运行时更改。
 :::
 
 </SlintProperty>
 
-
 ### width, height
 <SlintProperty propName="width, height" typeName="length" >
-The width and height of the element. When set, this overrides the default size.
+元素的宽度和高度。设置后，将覆盖默认大小。
 </SlintProperty>
-
 
 ### opacity
 <SlintProperty propName="opacity" typeName="float" defaultValue="1">
-A value between 0 and 1 (or a percentage) that is used to draw
-the element and its children with transparency.
-0 is fully transparent (invisible), and 1 is fully opaque.
-The opacity is applied to the tree of child elements as if they
-were first drawn into an intermediate layer, and then the whole layer is rendered with this opacity.
+一个介于 0 和 1 之间的值（或百分比），用于绘制元素及其子元素的透明度。0 表示完全透明（不可见），1 表示完全不透明。透明度应用于子元素树，就像它们首先绘制到中间层，然后整个层以该透明度渲染。
 
-:::tip[Tip]
-When an element has 0 opacity it will still take up layout space and any gesture handling will continue
-to work. If the intent is to hide an element so it has no gesture handling or no longer takes up layout space,
-use the `visible` property instead.
+:::tip[提示]
+当元素的透明度为 0 时，它仍会占用布局空间，并且任何手势处理将继续有效。如果意图是隐藏元素以便其不再进行手势处理或不再占用布局空间，请改用 `visible` 属性。
 :::
 </SlintProperty>
 
 ### visible
 <SlintProperty propName="visible" typeName="bool" defaultValue="true">
-When set to `false`, the element and all his children won't be drawn and not react to mouse input.
+当设置为 `false` 时，元素及其所有子元素将不会被绘制，并且不会响应鼠标输入。
 
-The following example demonstrates the `opacity` property with children. An opacity is applied to the red rectangle. Since the green rectangle is a child of the red one, you can see the gradient underneath it, but you can't see the red rectangle through the green one.
+以下示例演示了带有子元素的 `opacity` 属性。透明度应用于红色矩形。由于绿色矩形是红色矩形的子元素，您可以看到其下方的渐变，但无法通过绿色矩形看到红色矩形。
 <CodeSnippetMD imagePath="/src/assets/generated/rectangle-opacity.png"  imageWidth="200" imageHeight="200"  imageAlt='rectangle opacity'>
 ```slint
 Rectangle {
@@ -87,46 +74,34 @@ Rectangle {
 ### absolute-position
 <SlintProperty propName="absolute-position" typeName="struct" structName="Point" propertyVisibility="out">
 
-A common issue is that in a UI with many nested components it's useful to know their (x,y)position relative to
-the main window or screen. This convienience property gives easy read only access to that value.
+在具有许多嵌套组件的 UI 中，了解它们相对于主窗口或屏幕的 (x,y) 位置非常有用。此便利属性提供了对该值的只读访问。
 
-It represents a point specifying the absolute position within the enclosing <Link type="Window"/> or <Link type="PopupWindow"/>.
-It defines coordinates (x,y) relative to the enclosing Window or PopupWindow, but the reference frame is unspecified
-(could be screen, window, or popup coordinates).
+它表示一个点，指定在封闭的 <Link type="Window"/> 或 <Link type="PopupWindow"/> 内的绝对位置。它定义了相对于封闭窗口或弹出窗口的坐标 (x,y)，但参考框架未指定（可能是屏幕、窗口或弹出窗口坐标）。
 </SlintProperty>
 
-
-
-## Miscellaneous
+## 其他
 
 ### cache-rendering-hint
 <SlintProperty typeName="bool" propName="cache-rendering-hint" default="false" >
-When set to `true`, this provides a hint to the renderer to cache the contents of the element
-and all the children into an intermediate cached layer. For complex sub-trees that rarely
-change this may speed up the rendering, at the expense of increased memory consumption. Not
-all rendering backends support this, so this is merely a hint.
+当设置为 `true` 时，这为渲染器提供了一个提示，将元素及其所有子元素的内容缓存到中间缓存层中。对于很少更改的复杂子树，这可能会加速渲染，但会增加内存消耗。并非所有渲染后端都支持此功能，因此这只是一个提示。
 </SlintProperty>
-
-
 
 ### dialog-button-role
 <SlintProperty typeName="enum" enumName="DialogButtonRole" defaultValue="none">
-Specify that this is a button in a `Dialog`.
+指定这是 `Dialog` 中的一个按钮。
 </SlintProperty>
 
-## Common Callbacks
+## 通用回调函数
 
 ### `init()`
 
-Every element implicitly declares an `init` callback. You can assign a code block to it that will be invoked when the
-element is instantiated and after all properties are initialized with the value of their final binding. The order of
-invocation is from inside to outside. The following example will print "first", then "second", and then "third":
+每个元素隐式声明了一个 `init` 回调函数。您可以为其分配一个代码块，该代码块将在元素实例化且所有属性都使用其最终绑定的值初始化后调用。调用顺序是从内到外。以下示例将打印 "first"，然后是 "second"，最后是 "third"：
 
 ```slint
 component MyButton inherits Rectangle {
     in-out property <string> text: "Initial";
     init => {
-        // If `text` is queried here, it will have the value "Hello".
+        // 如果在此处查询 `text`，它将具有值 "Hello"。
         debug("first");
     }
 }
@@ -145,19 +120,15 @@ export component MyWindow inherits Window {
 }
 ```
 
-Don't use this callback to initialize properties, because this violates the declarative principle.
+不要使用此回调函数来初始化属性，因为这违反了声明式原则。
 
-Even though the `init` callback exists on all components, it cannot be set from application code,
-i.e. an `on_init` function does not exist in the generated code. This is because the callback is invoked during the creation of the component, before you could call `on_init` to actually set it.
+尽管 `init` 回调函数存在于所有组件中，但不能从应用程序代码中设置，即在生成的代码中不存在 `on_init` 函数。这是因为回调函数在组件创建期间调用，在您可以调用 `on_init` 来实际设置它之前。
 
-While the `init` callback can invoke other callbacks, e.g. one defined in a `global` section, and
-you _can_ bind these in the backend, this doesn't work for statically-created components, including
-the window itself, because you need an instance to set the globals binding. But it is possible
-to use this for dynamically created components (for example ones behind an `if`):
+虽然 `init` 回调函数可以调用其他回调函数，例如在 `global` 部分中定义的回调函数，并且您可以在后端绑定这些回调函数，但这不适用于静态创建的组件，包括窗口本身，因为您需要一个实例来设置全局绑定。但对于动态创建的组件（例如在 `if` 后面的组件），这是可能的：
 
 ```slint
 export global SystemService  {
-    // This callback can be implemented in native code using the Slint API
+    // 此回调函数可以使用 Slint API 在本机代码中实现
     callback ensure_service_running();
 }
 
@@ -171,104 +142,103 @@ component MySystemButton inherits Rectangle {
 export component AppWindow inherits Window {
     in property <bool> show-button: false;
 
-    // MySystemButton isn't initialized at first, only when show-button is set to true.
-    // At that point, its init callback will call ensure_service_running()
+    // MySystemButton 最初未初始化，仅在 show-button 设置为 true 时初始化。
+    // 此时，其 init 回调函数将调用 ensure_service_running()
     if show-button : MySystemButton {}
 }
 ```
 
-## Accessibility Properties
+## 无障碍属性
 
-Use the following `accessible-` properties to make your items interact well with software like screen readers, braille terminals and other software to make your application accessible.
-`accessible-role` must be set in order to be able to set any other accessible property or callback.
+使用以下 `accessible-` 属性使您的项目与屏幕阅读器、盲文终端和其他软件良好交互，以使您的应用程序具有无障碍性。必须设置 `accessible-role` 才能设置任何其他无障碍属性或回调函数。
 
 ### accessible-role
 <SlintProperty typeName="enum" enumName="AccessibleRole">
-The role of the element. This property is mandatory to be able to use any other accessible properties. It should be set to a constant value. (default value: `none` for most elements, but `text` for the Text element)
+元素的角色。此属性是使用任何其他无障碍属性的必要条件。应将其设置为常量值。（默认值：对于大多数元素为 `none`，但对于 `Text` 元素为 `text`）
 </SlintProperty>
 
 ### accessible-checkable
 <SlintProperty typeName="bool" propName="accessible-checkable" default="false">
-Whether the element is can be checked or not.
+元素是否可被检查。
 </SlintProperty>
 
 ### accessible-checked
 <SlintProperty typeName="bool" propName="accessible-checked" default="false">
-Whether the element is checked or not. This maps to the "checked" state of checkboxes, radio buttons, and other widgets.
+元素是否被检查。这映射到复选框、单选按钮和其他小部件的“checked”状态。
 </SlintProperty>
 
 ### accessible-description
 <SlintProperty typeName="string" propName="accessible-description" default='""'>
-The description for the current element.
+当前元素的描述。
 </SlintProperty>
 
 ### accessible-enabled
 <SlintProperty typeName="bool" propName="accessible-enabled" default="true">
-Whether the element is enabled or not. This maps to the "enabled" state of most widgets. (default value: `true`)
+元素是否启用。这映射到大多数小部件的“enabled”状态。（默认值：`true`）
 </SlintProperty>
 
 ### accessible-label
 <SlintProperty typeName="string" propName="accessible-label" default='""'>
-The label for an interactive element. (default value: empty for most elements, or the value of the `text` property for Text elements)
+交互元素的标签。（默认值：对于大多数元素为空，或对于 `Text` 元素为 `text` 属性的值）
 </SlintProperty>
 
 ### accessible-value-maximum
 <SlintProperty typeName="float" propName="accessible-value-maximum" default="0">
-The maximum value of the item. This is used for example by spin boxes.
+项目的最大值。例如，用于微调框。
 </SlintProperty>
 
 ### accessible-value-minimum
 <SlintProperty typeName="float" propName="accessible-value-minimum" default="0">
-The minimum value of the item.
+项目的最小值。
 </SlintProperty>
 
 ### accessible-value-step
 <SlintProperty typeName="float" propName="accessible-value-step" default="0">
-The smallest increment or decrement by which the current value can change. This corresponds to the step by which a handle on a slider can be dragged.
+当前值可以更改的最小增量或减量。这对应于滑块上可以拖动的步长。
 </SlintProperty>
 
 ### accessible-value
 <SlintProperty typeName="string" propName="accessible-value" default='""'>
-The current value of the item.
+项目的当前值。
 </SlintProperty>
 
 ### accessible-placeholder-text
 <SlintProperty typeName="string" propName="accessible-placeholder-text" default='""'>
-A placeholder text to use when the item's value is empty. Applies to text elements.
+当项目值为空时使用的占位符文本。适用于文本元素。
 </SlintProperty>
 
 ### accessible-item-selectable
 <SlintProperty typeName="bool" propName="accessible-value" >
-Whether the element can be selected or not.
+元素是否可选择。
 </SlintProperty>
 
 ### accessible-item-selected
 <SlintProperty typeName="bool" propName="accessible-item-selected" >
-Whether the element is selected or not. This maps to the "is-selected" state of listview items.
+元素是否被选中。这映射到列表视图项目的“is-selected”状态。
 </SlintProperty>
 
 ### accessible-item-index
 <SlintProperty typeName="int" propName="accessible-item-index">
- The index (starting from 0) of this element in a group of similar elements. Applies to list items, radio buttons and other elements.
+ 此元素在一组相似元素中的索引（从 0 开始）。适用于列表项、单选按钮和其他元素。
 </SlintProperty>
 
 ### accessible-item-count
 <SlintProperty typeName="int" propName="accessible-item-count">
-The total number of elements in a group. Applies to the parent container of a group of element such as list views, radio button groups or other grouping elements.
+一组元素的总数。适用于列表视图、单选按钮组或其他分组元素的父容器。
 </SlintProperty>
 
-
-## Accessibility Callbacks
-You can also use the following callbacks that are going to be called by the accessibility framework:
+## 无障碍回调函数
+您还可以使用以下回调函数，这些回调函数将由无障碍框架调用：
 
 ### accessible-action-default()
-Invoked when the default action for this widget is requested (eg: pressed for a button).
+当请求此小部件的默认操作时调用（例如：按下按钮）。
 
 ### accessible-action-set-value(string)
-Invoked when the user wants to change the accessible value.
+当用户想要更改无障碍值时调用。
 
 ### accessible-action-increment()
-Invoked when the user requests to increment the value.
+当用户请求增加值时调用。
 
 ### accessible-action-decrement()
-Invoked when the user requests to decrement the value.
+当用户请求减少值时调用。
+

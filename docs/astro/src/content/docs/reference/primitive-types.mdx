@@ -1,37 +1,36 @@
 ---
 <!-- Copyright © SixtyFPS GmbH <info@slint.dev> ; SPDX-License-Identifier: MIT -->
-title: Types
-description: All Slint types
+title: Types 类型
+description: 所有 Slint 类型
 ---
 
 import SlintProperty  from '/src/components/SlintProperty.astro';
 import Link from '/src/components/Link.astro';
 
-Slint is a statically typed language and offers a rich range of primitive types.
+Slint 是一种静态类型语言，提供了丰富的原始类型。
 
-## Primitive Types
+## 原始类型
 
 ### bool
 <SlintProperty propName="bool" typeName="bool" defaultValue='false'>
-boolean whose value can be either `true` or `false`.  
+布尔类型，其值可以是 `true` 或 `false`。
 </SlintProperty>
 
 ### string
 <SlintProperty propName="string" typeName="string" defaultValue='""'>
-Any sequence of utf-8 encoded characters surrounded by quotes is a `string`: `"foo"`.
+任何被引号包围的 UTF-8 编码字符序列都是一个 `字符串`：`"foo"`。
 
-Escape sequences may be embedded into strings to insert characters that would
-be hard to insert otherwise:
+可以在字符串中嵌入转义序列以插入其他难以直接插入的字符。
 
-| Escape          | Result                                                                                          |
+| 转义符           | 结果                                                                                             |
 | --------------- | ----------------------------------------------------------------------------------------------- |
 | `\"`            | `"`                                                                                             |
 | `\\`            | `\`                                                                                             |
-| `\n`            | new line                                                                                        |
-| `\u{x}`         | where `x` is a hexadecimal number, expands to the unicode code point represented by this number |
-| `\{expression}` | the result of evaluating the expression                                                         |
+| `\n`            | 新的一行                                                                                        |
+| `\u{x}`         | 其中 `x` 是一个十六进制数，表示由该数字代表的 Unicode 码点。 |
+| `\{expression}` | 表达式求值的结果                                                         |
 
-Anything else following an unescaped `\` is an error.
+任何未转义的 `\` 后跟的其他字符都会导致错误。
 
 ```slint
 export component Example inherits Text {
@@ -40,13 +39,13 @@ export component Example inherits Text {
 ```
 
 :::note[Note]
-  The `\{...}` syntax is not valid within the `slint!` macro in Rust.
+  在 Rust 的 `slint!` 宏中，`\{...}` 语法是无效的。
 :::
 </SlintProperty>
 
-## Numeric Types
+## Numeric Types 数字类型
 
-### angle
+### angle 角度
 <SlintProperty propName="angle" typeName="angle" defaultValue='0deg'>
 Angle measurement, corresponds to a literal like `90deg`, `1.2rad`, `0 25turn`  
 </SlintProperty>

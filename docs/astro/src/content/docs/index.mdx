@@ -1,12 +1,12 @@
 ---
 <!-- Copyright © SixtyFPS GmbH <info@slint.dev> ; SPDX-License-Identifier: MIT -->
-title: Overview
-type: overview
+title: 概述
+type: 概述
 sidebar:
   order: 1
 hero:
-  title: Welcome to Slint
-  tagline: Seamlessly build elegant GUIs for Embedded,&nbsp;Desktop,&nbsp;and&nbsp;Mobile
+  title: 欢迎来到 Slint
+  tagline: 无缝构建适用于嵌入式、桌面和移动设备的优雅 GUI
 ---
 
 import { LinkButton, LinkCard, Card, CardGrid } from '@astrojs/starlight/components';
@@ -26,69 +26,64 @@ import LineHighlight from '/src/assets/getting-started/line-highlight.webp';
   <Image src={BannerImage} width="700px" alt="Slint examples running on a range of devices"/>
 </div>
 
-The documentation is split into several sections:
+文档被分为几个部分：
 
 <CardGrid>
 <LinkCard
-  title="Guide"
-  description="This will get you up and running with the tooling for Slint development including the IDE integration via the Slint Language Server (LSP) and Slint Viewer.
-  <br/><br/>
-  It then offers a guide explaining all the key concepts of Slint and how to understand and use the Slint language."
+  title="指南"
+  description="这将帮助你快速上手 Slint 开发所需的工具，包括通过 Slint 语言服务器 (LSP) 和 Slint 查看器实现的 IDE 集成。
+<br/><br/>
+然后，它提供了一本指南，解释了所有 Slint 的关键概念以及如何理解和使用 Slint 语言。"
   href="/master/docs/slint"
 >
 </LinkCard>
 
 <LinkCard
-  title="Reference"
-  description="This contains the API reference for all aspects of the Slint language. All the elements, properties, functions, callbacks and namespaces. It also contains the
-API reference for the `std-widgets` library. A set of cross platform components that can be used to build desktop applications."
+  title="参考手册"
+  description="这包含了 Slint 语言各个方面 的 API 参考手册。包括所有的元素、属性、函数、回调和命名空间。此外，还包含了 `std-widgets` 库的 API 参考手册。这是一组跨平台组件，可用于构建桌面应用程序。"
   href="/master/docs/slint/reference/primitive-types"
 >
 </LinkCard>
 
 <LinkCard
-  title="Tutorial"
-  description="For those that like to learn by example or want to see how to structure a simple application, this section contains a step-by-step tutorial that walks you 
-through the creation of a simple memory game example."
+  title="教程"
+  description="对于喜欢通过示例学习或想了解如何构建一个简单应用程序结构的人来说，本节包含一个逐步教程，引导您完成创建一个简单的记忆游戏示例的过程。"
 href="/master/docs/slint/tutorial/quickstart/"
 >
 </LinkCard>
 
 <LinkCard
-  title="Language Integrations"
-  description="This details the API for the Rust, C++, and JS-Runtime versions of Slint."
+  title="语言集成"
+  description="这详细介绍了 Slint 的 Rust、C++ 和 JS-Runtime 版本的 API。"
 href="/master/docs/slint/language-integrations/"
 >
 </LinkCard>
 </CardGrid>
 
-### Documentation features
+### 文档特性
 
-The documentation includes a lot of code snippets. The language hint lets you know what
-language the snippet is written in.
+文档中包含大量代码片段。语言提示会告知您片段是用哪种语言编写的。
 <div style="display: flex; justify-content: left;">
 <Image src={LanguageHint} width="500" alt="Screenshot showing language hint" />
 </div>
 
 
-Some snippets of Slint code are interactive. You can click the `run` button to run the snippet
-in a web based live-editing tool called [SlintPad](https://slintpad.com).
+某些 Slint 代码片段是交互式的。您可以点击 `run` 按钮，在一个名为 [SlintPad](https://slintpad.com) 的基于 Web 的实时编辑工具中运行这些代码片段。
 <div style="display: flex; justify-content: left;">
 <Image src={RunInSlintPad} width="500" alt="Screenshot showing run button"  />
 </div>
 
-To easily copy the text of a snippet use the copy button.
+要轻松复制代码片段的文本，可以使用复制按钮。
 <div style="display: flex; justify-content: left;">
 <Image src={CopySnippet} width="500" alt="Screenshot showing copy button"  />
 </div>
 
-Examples that want to help focus on a specific part of the code will have highlights. They are only
-a documentation feature and you won't see this kind of highlight when writing your own code.
+帮助聚焦代码特定部分的示例将会有高亮显示。这只是文档中的功能，在编写您自己的代码时不会看到这种高亮显示。
 <div style="display: flex; justify-content: left;">
 <Image src={LineHighlight} width="500" alt="Screenshot showing text highlights" />
 </div>
 
-### Get in touch
+### 联系我们
 
 <FourCardGrid>
 <LinkCard
